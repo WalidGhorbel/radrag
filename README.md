@@ -13,7 +13,7 @@
 The first version asked a general vision-language model to read the category (Benign, Suspicious, or Malignant) straight from the image. It was right only 12–24% of the time, and it kept over-calling the worst category, Malignant, about 8x too often. So a dedicated classifier was trained for this task instead (ConvNeXtV2-tiny), which reached 97% agreement with the real category on unseen data.
 
 A second test checked whether the LLM's written description actually matched the image, or just the category label. Two different real images, given the same category, produced descriptions that were 74% identical in wording. So the roles were split: the classifier decides the category, the LLM only writes descriptive text to match it, and the app makes that split clear to the reader.
-Full results are in [Validation & Known Limitations](#validation--known-limitations).
+
 
 ---
 
