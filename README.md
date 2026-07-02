@@ -188,4 +188,8 @@ This project is built on the CDD-CESM dataset. If you use the dataset, please ci
 > dataset for diagnostic and artificial intelligence research. *Sci Data* 9, 122 (2022).
 > https://doi.org/10.1038/s41597-022-01238-0
 
-To cite this repository, see [`CITATION.cff`](CITATION.cff), or just hit "Cite this repository" in the sidebar.
+If you reference this project itself, please cite it as:
+
+> Ghorbel, W. (2026). cesm-report-generation: A hybrid classification and generation
+> pipeline for contrast-enhanced spectral mammography.
+> https://github.com/WalidGhorbel/cesm-report-generation
