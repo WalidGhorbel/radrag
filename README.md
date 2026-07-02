@@ -1,20 +1,20 @@
 # Contrast-Enhanced Mammography: From Image to Conditioned Generative Reports
 
-**A hybrid classification + generation pipeline for contrast-enhanced spectral mammography (CESM), built around rigorously testing what each component can and can't do — rather than assuming a general-purpose model can do all of it.**
+**A hybrid classification and generation pipeline for contrast-enhanced spectral mammography (CESM). Each component was tested for what it can and can't actually do, instead of assuming a general-purpose model would handle all of it.**
 
 ![Status](https://img.shields.io/badge/status-research%20prototype-orange) ![Not for clinical use](https://img.shields.io/badge/clinical%20use-not%20validated-red) ![Python](https://img.shields.io/badge/python-3.11%2B-blue)
 
-> Trained and evaluated on the public [CDD-CESM dataset](https://doi.org/10.1038/s41597-022-01238-0) (Khaled et al., *Scientific Data*, 2022). Research prototype only — not a diagnostic device, not clinically validated.
+> Trained and evaluated on the public [CDD-CESM dataset](https://doi.org/10.1038/s41597-022-01238-0) (Khaled et al., *Scientific Data*, 2022). Research prototype only, not a diagnostic device, not clinically validated.
 
 ---
 
 ## Overview
 
-The initial approach used a general-purpose vision-LLM to classify BI-RADS category directly from mammography images. That approach was evaluated rather than assumed to work — it measured **12–24% exact-match accuracy**, with a diagnosable, quantified failure mode (an 8x over-prediction of the most severe category). That result led to fine-tuning a dedicated classifier (ConvNeXtV2-tiny) instead, which reached **97% category agreement** on held-out validation data.
+The first version of this pipeline used a general-purpose vision-LLM to classify BI-RADS category directly from mammography images. It measured **12–24% exact-match accuracy**, with a clear failure pattern: an 8x over-prediction of the most severe category. Based on that result, a dedicated classifier (ConvNeXtV2-tiny) was fine-tuned instead, reaching **97% category agreement** on held-out validation data.
 
-A second experiment — a controlled ablation holding the predicted category fixed while varying the input image — showed that the LLM's descriptive text does not reliably reflect image content either: two genuinely different real images produced 74%-overlapping narratives. The system was redesigned around this finding: the trained classifier owns the diagnosis, the LLM generates category-consistent illustrative language only, and the interface labels that distinction explicitly.
+A follow-up experiment tested whether the LLM's descriptive text actually reflected the image it was looking at. Holding the predicted category fixed and varying the input image, two genuinely different real images produced 74%-overlapping narratives. So the system was redesigned: the trained classifier makes the category call, the LLM writes category-consistent illustrative language, and the interface labels that distinction explicitly.
 
-That evidence-driven separation of concerns — established through measurement, not assumed — is the core design decision behind this project. Full results in [Validation & Known Limitations](#validation--known-limitations).
+Full results are in [Validation & Known Limitations](#validation--known-limitations).
 
 ---
 
@@ -109,59 +109,45 @@ streamlit run app.py              # opens at localhost:8501
 
 ### Data & checkpoints
 
-Not included in this repo (dataset licensing + size):
+This repo doesn't include the dataset or trained weights (licensing and size):
 
-- **Dataset**: [CDD-CESM on TCIA](https://doi.org/10.1038/s41597-022-01238-0) — images, reports, and annotations.
-- **Checkpoints**: 4 trained classifiers (`best_birads_{dm,cesm}.pt`, `best_cancer_{dm,cesm}.pt`). 
+- **Dataset**: [CDD-CESM on TCIA](https://doi.org/10.1038/s41597-022-01238-0), images, reports, and annotations.
+- **Checkpoints**: 4 trained classifiers (`best_birads_{dm,cesm}.pt`, `best_cancer_{dm,cesm}.pt`). Train these yourself with the classifier notebook, or point `CHECKPOINT_DIR` in `app.py` at existing ones.
 
 ---
 
 ## Using the app
 
-1. **Select a case** — load a bundled example (ships with real ground truth, so the model's output is checked live against an actual radiologist's report) or upload your own Low Eenergy (LE) or Dual-Energy Subtracted (DES) breast image.
+1. **Select a case.** Load a bundled example (it ships with real ground truth, so the model's output can be checked live against an actual radiologist's report), or upload your own Low Energy (LE) or Dual-Energy Subtracted (DES) breast image.
 
    ![Case selection sidebar](screenshots/01-case-selection.png)
 
-2. **Generate the Low Energy (LE) report**: one button runs on existing right and left breasts at once. The image shown is the exact 1024×1024 preprocessed input the model receives, not the raw file.
+2. **Generate the Low Energy (LE) report.** One button runs both breasts at once. The image shown is the exact 1024×1024 preprocessed input the model receives, not the raw file.
 
    ![LE images loaded, ready to generate](screenshots/02-le-images.png)
 
    ![Generate LE report button](screenshots/02b-generate-button.png)
 
-   Each result shows the classifier's category (color-coded, with confidence) and the LLM's illustrative narrative. For bundled examples, it's shown alongside the real radiologist's finding with a **✓ MATCH / ✗ MISMATCH** badge — the fastest way to see actual accuracy rather than take it on faith.
+   Each result shows the classifier's category (color-coded, with confidence) and the LLM's illustrative narrative. For bundled examples, it also shows the real radiologist's finding next to it, with a **✓ MATCH / ✗ MISMATCH** badge, the fastest way to see actual accuracy instead of taking it on faith.
 
    ![Real finding vs. generated output, with match badges](screenshots/03-real-vs-generated.png)
 
-   A Grad-CAM attention overlay is shown beneath each image (interpretability caveats noted directly in the app
-   
-   (#validation--known-limitations)).
+   A Grad-CAM attention overlay appears beneath each image. See [Validation & Known Limitations](#validation--known-limitations) for what it does and doesn't reliably show.
 
    ![Grad-CAM attention heatmap](screenshots/04-gradcam.png)
 
-3. **Generate the Contrast-Enhanced (DES) report** — same pattern, run second, matching how the source reports are structured (LE assessment, then a separate contrast-enhanced assessment).
-4. **Review the combined report** — a plain-text view matching the original dataset's report format.
+3. **Generate the Contrast-Enhanced (DES) report.** Same pattern, run second. This matches how the source reports are structured: an LE assessment first, then a separate contrast-enhanced assessment.
+4. **Review the combined report.** A plain-text view matching the original dataset's report format.
 
 ---
 
 ## Known Limitations
 
-**Grad-CAM location is partially reliable.** Gradient-based maps are known to
-sometimes highlight dominant image edges rather than the exact region driving a
-prediction — a general characteristic of the technique, not specific to this model. Testing
-against 3 known-location cases confirmed this here too: the vertical (upper/lower) axis
-matched the real finding in 2/2 cases, while the horizontal axis consistently leaned toward
-the chest-wall edge. The app displays the raw heatmap for human interpretation and does
-not generate location claims from it.
+**Grad-CAM location is only partly reliable.** Gradient-based attention maps can highlight dominant image edges instead of the exact region driving a prediction. This is a known characteristic of the technique in general, not something specific to this model. Testing against 3 known-location cases found the same pattern here: the vertical (upper/lower) axis matched the real finding in 2 out of 2 cases, but the horizontal axis consistently leaned toward the chest-wall edge. The app shows the raw heatmap for human interpretation and doesn't generate location claims from it.
 
-**Narrative text is illustrative, not a visual read.** A controlled test (same predicted
-category, two different real images) showed the generated description tracks the
-category label more than the image itself. The interface labels all narrative text
-accordingly — a deliberate design choice, not an oversight.
+The narrative text is illustrative, not a visual read. A controlled test held the predicted category fixed and varied the input image; the generated description tracked the category label more than the image itself. The interface labels all narrative text accordingly, on purpose.
 
-Two things fall outside current scope rather than being guessed at: ACR breast density,
-and the individual BI-RADS digit/subcategory (e.g. 4A vs. 4B) — the classifier predicts
-the coarse category (Benign/Suspicious/Malignant) only.
-
+ACR breast density and the individual BI-RADS digit or subcategory (4A vs. 4B, for example) are both out of scope. The classifier predicts the coarse category, Benign, Suspicious, or Malignant, and nothing finer than that.
 
 ---
 
