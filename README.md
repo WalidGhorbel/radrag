@@ -1,4 +1,4 @@
-# RadRAG — CESM Report Assistant
+# Contrast-Enhanced Mammography From Image to Conditioned Generative Reports
 
 **A hybrid classification + generation pipeline for contrast-enhanced spectral mammography (CESM), built around rigorously testing what each component can and can't do — rather than assuming a general-purpose model can do all of it.**
 
