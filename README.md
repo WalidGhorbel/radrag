@@ -10,10 +10,9 @@
 
 ## Overview
 
-The first version of this pipeline used a general-purpose vision-LLM to classify BI-RADS category directly from mammography images. It measured **12–24% exact-match accuracy**, with a clear failure pattern: an 8x over-prediction of the most severe category. Based on that result, a dedicated classifier (ConvNeXtV2-tiny) was fine-tuned instead, reaching **97% category agreement** on held-out validation data.
+The first version asked a general vision-language model to read the category (Benign, Suspicious, or Malignant) straight from the image. It was right only 12–24% of the time, and it kept over-calling the worst category, Malignant, about 8x too often. So a dedicated classifier was trained for this task instead (ConvNeXtV2-tiny), which reached 97% agreement with the real category on unseen data.
 
-A follow-up experiment tested whether the LLM's descriptive text actually reflected the image it was looking at. Holding the predicted category fixed and varying the input image, two genuinely different real images produced 74%-overlapping narratives. So the system was redesigned: the trained classifier makes the category call, the LLM writes category-consistent illustrative language, and the interface labels that distinction explicitly.
-
+A second test checked whether the LLM's written description actually matched the image, or just the category label. Two different real images, given the same category, produced descriptions that were 74% identical in wording. So the roles were split: the classifier decides the category, the LLM only writes descriptive text to match it, and the app makes that split clear to the reader.
 Full results are in [Validation & Known Limitations](#validation--known-limitations).
 
 ---
