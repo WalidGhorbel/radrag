@@ -99,7 +99,8 @@ flowchart LR
 **Prerequisites:** Python 3.11+, [uv](https://docs.astral.sh/uv/), Docker, an Anthropic API key, the CDD-CESM dataset and trained checkpoints (see [Data & checkpoints](#data--checkpoints)).
 
 ```bash
-git clone <repo-url> && cd cesm-report-generation
+git clone https://github.com/WalidGhorbel/cesm-report-generation.git 
+cd cesm-report-generation
 uv sync
 cp .env.example .env              # add ANTHROPIC_API_KEY
 docker compose up -d              # starts Qdrant (retrieval component)
