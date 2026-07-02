@@ -1,0 +1,40 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "cesm-report-generation: A hybrid classification and generation pipeline for contrast-enhanced spectral mammography"
+authors:
+  - family-names: Ghorbel
+    given-names: Walid
+type: software
+url: "https://github.com/WalidGhorbel/cesm-report-generation"
+repository-code: "https://github.com/WalidGhorbel/cesm-report-generation"
+date-released: 2026-07-02
+keywords:
+  - contrast-enhanced mammography
+  - CESM
+  - medical imaging
+  - deep learning
+  - report generation
+license: MIT
+preferred-citation:
+  type: article
+  authors:
+    - family-names: Khaled
+      given-names: Rana
+    - family-names: Helal
+      given-names: Maha
+    - family-names: Alfarghaly
+      given-names: Omar
+    - family-names: Mokhtar
+      given-names: Omnia
+    - family-names: Elkorany
+      given-names: Abeer
+    - family-names: El Kassas
+      given-names: Hebatalla
+    - family-names: Fahmy
+      given-names: Aly
+  title: "Categorized contrast enhanced mammography dataset for diagnostic and artificial intelligence research"
+  journal: "Scientific Data"
+  volume: 9
+  start: 122
+  year: 2022
+  doi: "10.1038/s41597-022-01238-0"

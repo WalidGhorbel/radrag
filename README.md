@@ -182,7 +182,22 @@ PyTorch · `timm` (ConvNeXtV2-tiny) · Anthropic Claude API (vision) · Qdrant (
 
 ## Citation
 
+If you use this dataset, please cite the original data paper:
+
+> Khaled, R., Helal, M., Alfarghaly, O. et al. Categorized contrast enhanced
+> mammography dataset for diagnostic and artificial intelligence research.
+> *Sci Data* 9, 122 (2022). https://doi.org/10.1038/s41597-022-01238-0
+
+```bibtex
+@article{khaled2022cdd,
+  title   = {Categorized contrast enhanced mammography dataset for diagnostic and artificial intelligence research},
+  author  = {Khaled, Rana and Helal, Maha and Alfarghaly, Omar and Mokhtar, Omnia and Elkorany, Abeer and El Kassas, Hebatalla and Fahmy, Aly},
+  journal = {Scientific Data},
+  volume  = {9},
+  pages   = {122},
+  year    = {2022},
+  doi     = {10.1038/s41597-022-01238-0}
+}
 ```
-Khaled, R., Helal, M., Alfarghaly, O. et al. Categorized contrast enhanced mammography
-dataset for diagnostic and artificial intelligence research. Sci Data 9, 122 (2022).
-```
+
+If you use or reference this repository itself, see [`CITATION.cff`](CITATION.cff) — GitHub also renders a "Cite this repository" button in the sidebar generated from that file.
