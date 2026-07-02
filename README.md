@@ -147,9 +147,6 @@ Every figure below came from an actual run against held-out data. Where somethin
 |---|---|
 | Report parsing (`report_parser.py`) | 326/326 patients parsed cleanly |
 | Cross-validation (parser vs. structured annotations) | 566/566 agreement, 0 disagreement |
-| Classifier category prediction (10 held-out patients, 36 cases) | 32/36 (89%); 31/32 (97%) excluding one documented hard case |
-| Preprocessing pixel-fidelity vs. training pipeline | 0.00 mean absolute difference |
-| Grad-CAM, vertical axis (2 known-location cases) | 2/2 correct |
 | BI-RADS classifier (LE) — macro F1 / QWK / AUC | 0.635 / 0.632 / 0.829 |
 | BI-RADS classifier (DES) — macro F1 / QWK / AUC | 0.667 / 0.750 / 0.822 |
 | Cancer classifier (LE / DES) — AUC | 0.931 / 0.888 |
